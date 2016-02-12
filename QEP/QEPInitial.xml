@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+********************************************************************************************************
+The local Initial Query Execution Plan (QEP), ie. no remote operations
+********************************************************************************************************
+helpdesk@linea.gov.br --> 
+<QEPTemplate xmlns="http://giga03.lncc.br/DIP/WP4/CoDIMS-D" xmlns:op="http://giga03.lncc.br/DIP/WP4/CoDIMS-D/Operator" xmlns:qep="http://giga03.lncc.br/DIP/WP4/CoDIMS-D/QEP">
+	
+    <qep:QEP type="Initial">		
+        <op:Operator id="1" prod="2" type="">
+            <Name>ParallelNACluster</Name>
+            <ParameterList>
+                <conf1>--master</conf1>
+                <conf2>spark://master:7077</conf2>                     		
+                <Projectjar>/home/dexl/Nacluster/App/ParallelNACluster.jar</Projectjar>	
+                <FileName>hdfs://mnmaster:9000/user/dexllab/mapred_saida</FileName>
+                <FileName1>hdfs://mnmaster:9000/user/dexllab/final_saida</FileName1>
+                <FileName2>/home/dexl/Nacluster/Catalogos/partitions.txt</FileName2>
+                <number>0</number>
+                <number2>0</number2>			
+            </ParameterList>		
+        </op:Operator>	
+
+        <op:Operator id="2" prod="3" type="">
+            <Name>MapReduce</Name>
+            <ParameterList>
+                <Projectjar>/home/dexl/Nacluster/App/OperatorMapRed.jar</Projectjar>
+                <Class>hadoop.OperatorMapRedMapper</Class>
+                <FileName>/user/dexllab/Catalogos/2mass1MilhaoShaked3AmbNivel0.txt</FileName>
+                <FileName1>/user/dexllab/Catalogos_partitions/partitions.txt</FileName1>
+                <FileResult>/user/dexllab/mapred_saida</FileResult>
+                <NumberOfPartitions>4</NumberOfPartitions>
+            </ParameterList>
+        </op:Operator>			
+        <op:Operator id="3" prod="4" type="">
+            <Name>CopytoHdfs</Name>
+            <ParameterList>
+                <HDFS1>fs.defaultFS</HDFS1>
+                <HDFS2>hdfs://mnmaster:9000</HDFS2>
+                <FileName>/home/dexl/Nacluster/Catalogos/partitions.txt</FileName>
+                <FileName1>/home/dexl/Nacluster/Catalogos/2mass1MilhaoShaked3AmbNivel0.txt</FileName1>
+                <FileDestiny>/partitions.txt</FileDestiny>
+                <FileDestiny1>/2mass1MilhaoShaked3AmbNivel0.txt</FileDestiny1>
+            </ParameterList>
+        </op:Operator>
+
+        <op:Operator id="4" prod="5" type="">
+            <Name>France</Name>
+            <ParameterList>
+                <FileName>/home/dexl/Nacluster/Catalogos/partitions.txt</FileName>
+                <Franceexe>/home/dexl/Nacluster/App/france.exe</Franceexe>
+                <FileName1>/home/dexl/Nacluster/Catalogos/2mass1MilhaoShaked3AmbNivel0.txt</FileName1>
+                <NumberOfPartitions>4</NumberOfPartitions>
+            </ParameterList>
+        </op:Operator>
+		
+        <op:Operator id="5" prod="0" type="Scan" numberTuples="?">
+            <Name>TupleScan</Name>
+            <ParameterList>
+                <DataSourceName>RelationalDataSource</DataSourceName>
+                <DatabaseIRI>/home/dexl/Nacluster/Catalogos/2mass1MilhaoShaked3AmbNivel0.txt</DatabaseIRI>
+            </ParameterList>
+        </op:Operator>
+    </qep:QEP>
+</QEPTemplate>
